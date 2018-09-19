@@ -1,12 +1,15 @@
 package com.safersolutions;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
 
 public class Main extends Application {
 
@@ -25,7 +28,7 @@ public class Main extends Application {
         TextField depName;
         Button addDepButton;
 
-        //To.do o codigo de JavaFX vem aqui.
+
         primaryStage.setTitle("Crew Management Tool 0.0.1");
         welcomeText = new Label("Bem vindo!");
         introText = new Label("Para começar adicione um novo departamento com que deseja administrar: ");
@@ -34,9 +37,13 @@ public class Main extends Application {
         addDepButton = new Button("Add");
 
 
-        //Aqui eh onde iremos configurar o layout do Stage:
-        Pane layout = new Pane();
-        layout.getChildren().addAll(welcomeText, introText, depName, addDepButton);
+        //Aqui eh onde iremos configurar o layout da Scene de boas vindas:
+        //ly = layout
+        Pane lyWelcome = new Pane();
+        lyWelcome.getChildren().addAll(welcomeText, introText, depName, addDepButton);
+
+        //o layout da Scene de cadastro de departamento:
+        Pane lyCadDepto = new Pane();
 
         //Aqui posicionamos os objetos dentro da Scene
         //welcomeText
@@ -57,9 +64,35 @@ public class Main extends Application {
 
 
         //Aqui eh onde criamos uma Scene e atribuimos ela ao Stage:
-        Scene scene = new Scene(layout, 800, 600);
+        Scene scene = new Scene(lyWelcome, 800, 600);
         primaryStage.setScene(scene);
 
         primaryStage.show();
+
+        //Aqui vem a parte logica do codigo
+        //Lidamos com o evento de clique do botao de cadastrar novo depto
+        addDepButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override public void handle(ActionEvent e) {
+                //sc = scene
+
+                if(depName.getText().isEmpty()){
+                    //Alerta caso o usuario nao preencha o campo de nome do departamento
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erro!");
+                    alert.setHeaderText("Um ou mais campos não foram preenchidos!");
+                    alert.showAndWait();
+                }else{
+                    Scene scCadDepto = new Scene(lyCadDepto, 800, 600);
+                    primaryStage.setScene(scCadDepto);
+                }
+
+
+
+
+
+
+            }
+        });
+
     }
 }
