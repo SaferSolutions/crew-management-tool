@@ -1,2 +1,2 @@
 # crew-management-tool
-A simple crew management software.
+A simple crew management software
