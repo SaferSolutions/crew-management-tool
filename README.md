@@ -8,3 +8,7 @@ CHANGELOG
 0.0.4
   -Added a Department scene;
   -Handled an button event;
+
+0.0.5
+  - Imported the ConnectorJ driver;
+  - Connection class transferred to a new package;
