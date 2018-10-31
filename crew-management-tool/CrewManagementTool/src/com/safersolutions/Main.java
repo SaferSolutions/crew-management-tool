@@ -12,8 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+
 
 
 public class Main extends Application {
@@ -30,6 +29,10 @@ public class Main extends Application {
     @Override
     //Em JavaFX a janela em sua totalidade eh chamada de 'Stage', o conteudo dentro dela se chama 'Scene'
     public void start(Stage primaryStage) throws Exception {
+
+
+        ConnectionSQL.getConexaoMySQL();
+
         //dep = departamento.
 
         Label introText, welcomeText;
@@ -92,9 +95,6 @@ public class Main extends Application {
                 }else{
                     Scene scCadDepto = new Scene(lyCadDepto, 800, 600);
                     primaryStage.setScene(scCadDepto);
-
-                    
-
 
                 }
 

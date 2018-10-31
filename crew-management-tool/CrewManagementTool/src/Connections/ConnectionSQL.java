@@ -10,7 +10,7 @@ import java.sql.SQLException;
 //Início da classe de conexão//
 public class ConnectionSQL{
 
-    public static String status = "Não conectou...";
+    private static String status = "Não conectou...";
 
     //Método Construtor da Classe//
     public ConnectionSQL() {
@@ -25,7 +25,7 @@ public class ConnectionSQL{
             // Carregando o JDBC Driver padrão
             String driverName = "com.mysql.jdbc.Driver";
 
-            Class.forName(driverName);
+            Class.forName(driverName).newInstance();
 
             // Configurando a nossa conexão com um banco de dados//
             String serverName = "localhost";    //nome do servidor mysql
@@ -63,12 +63,22 @@ public class ConnectionSQL{
 
             return null;
 
+        } catch (InstantiationException e) {
+            System.out.println("Erro ao instanciar...");
+
+            return null;
+
+        } catch (IllegalAccessException e){
+            System.out.println("Erro: acesso ilegal...");
+
+            return null;
+
         }
 
     }
 
     //Método que retorna o status da conexão//
-    public static String statusConection() {
+    public static String getStatus() {
         return status;
 
     }
