@@ -3,6 +3,7 @@ package Connections;
 //Classes necessárias para uso de Banco de dados //
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 
@@ -10,8 +11,12 @@ import java.sql.SQLException;
 //Início da classe de conexão//
 public class ConnectionSQL{
 
-    public static String status = "Não conectou...";
+    private static String status = "Não conectou...";
 
+    String insertQuery = "INSERT INTO funcionario(nome_funcionario, cpf_funcionario, rg_funcionario, endereco_funcionario, salario, gasto_individual)"
+            + "VALUES(?,?,?,?,?,?)";
+
+    public static PreparedStatement ps;
     //Método Construtor da Classe//
     public ConnectionSQL() {
 
@@ -25,7 +30,7 @@ public class ConnectionSQL{
             // Carregando o JDBC Driver padrão
             String driverName = "com.mysql.jdbc.Driver";
 
-            Class.forName(driverName);
+            Class.forName(driverName).newInstance();
 
             // Configurando a nossa conexão com um banco de dados//
             String serverName = "localhost";    //nome do servidor mysql
@@ -39,6 +44,12 @@ public class ConnectionSQL{
             String password = ""; //senha de acesso do banco
 
             connection = DriverManager.getConnection(url, username, password);
+
+            String insertQuery = "INSERT INTO funcionario(nome_funcionario, cpf_funcionario, rg_funcionario, endereco_funcionario, salario, gasto_individual)"
+                    + "VALUES(?,?,?,?,?,?)";
+
+             ps = (connection.prepareStatement(insertQuery));
+
 
             //Testa a conexão//
             if (connection != null) {
@@ -63,12 +74,22 @@ public class ConnectionSQL{
 
             return null;
 
+        } catch (InstantiationException e) {
+            System.out.println("Erro ao instanciar...");
+
+            return null;
+
+        } catch (IllegalAccessException e){
+            System.out.println("Erro: acesso ilegal...");
+
+            return null;
+
         }
 
     }
 
     //Método que retorna o status da conexão//
-    public static String statusConection() {
+    public static String getStatus() {
         return status;
 
     }

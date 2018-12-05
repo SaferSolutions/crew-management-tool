@@ -3,6 +3,8 @@ package com.safersolutions;
 import Connections.ConnectionSQL;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,8 +14,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 public class Main extends Application {
@@ -30,81 +32,62 @@ public class Main extends Application {
     @Override
     //Em JavaFX a janela em sua totalidade eh chamada de 'Stage', o conteudo dentro dela se chama 'Scene'
     public void start(Stage primaryStage) throws Exception {
+        ConnectionSQL.getConexaoMySQL();
+        FXMLLoader loadMainMenu = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
+        FXMLLoader loadInsertFunc = new FXMLLoader(getClass().getResource("InsertFunc.fxml"));
+
+        Controller controller = new Controller();
+        loadMainMenu.setController(controller);
+
+
+        Parent rootMainMenu = loadMainMenu.load();
+        Parent rootInsertFunc = loadInsertFunc.load();
+
+        primaryStage.setTitle("CMT - Crew Management Tool");
+        primaryStage.setScene(new Scene(rootMainMenu, 640, 400));
+        primaryStage.show();
         //dep = departamento.
-
-        Label introText, welcomeText;
-        TextField depName;
-        Button addDepButton;
-
-
-        primaryStage.setTitle("Crew Management Tool 0.0.1");
-        welcomeText = new Label("Bem vindo!");
-        introText = new Label("Para começar adicione um novo departamento com que deseja administrar: ");
-
-        depName = new TextField();
-        addDepButton = new Button("Add");
-
-
-        //Aqui eh onde iremos configurar o layout da Scene de boas vindas:
-        //ly = layout
-        Pane lyWelcome = new Pane();
-        lyWelcome.getChildren().addAll(welcomeText, introText, depName, addDepButton);
-
-        //o layout da Scene de cadastro de departamento:
-        Pane lyCadDepto = new Pane();
-
-        //Aqui posicionamos os objetos dentro da Scene
-        //welcomeText
-        welcomeText.setLayoutX(10);
-        welcomeText.setLayoutY(50);
-
-        //introText
-        introText.setLayoutX(10);
-        introText.setLayoutY(100);
-
-        //depName
-        depName.setLayoutX(10);
-        depName.setLayoutY(200);
-
-        //addDepButton
-        addDepButton.setLayoutX(10);
-        addDepButton.setLayoutY(250);
-
-
-        //Aqui eh onde criamos uma Scene e atribuimos ela ao Stage:
-        Scene scene = new Scene(lyWelcome, 800, 600);
-        primaryStage.setScene(scene);
-
         primaryStage.show();
 
         //Aqui vem a parte logica do codigo
-        //Lidamos com o evento de clique do botao de cadastrar novo depto
-        addDepButton.setOnAction(new EventHandler<ActionEvent>(){
+        //Lidamos com o evento de clique do botao de inserir novo funcionario
+        controller.addNewFunc.setOnAction(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent e) {
                 //sc = scene
 
-                if(depName.getText().isEmpty()){
-                    //Alerta caso o usuario nao preencha o campo de nome do departamento
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro!");
-                    alert.setHeaderText("Um ou mais campos não foram preenchidos!");
-                    alert.showAndWait();
-                }else{
-                    Scene scCadDepto = new Scene(lyCadDepto, 800, 600);
-                    primaryStage.setScene(scCadDepto);
+                    Scene scCadFunc = new Scene(rootInsertFunc, 640, 400);
+                    primaryStage.setScene(scCadFunc);
+                    primaryStage.setTitle("Novo usuário");
 
-                    
-
-
-                }
-
-
-
-
-
+//
 
             }
         });
+
+        if(primaryStage.getTitle().equals("Novo usuário")){
+            ConnectionSQL.ps.setString(1, controller.funcNome.toString());
+            ConnectionSQL.ps.setString(2, controller.funcCPF.toString());
+            ConnectionSQL.ps.setString(3, controller.funcRG.toString());
+            ConnectionSQL.ps.setInt(4, Integer.parseInt(controller.funcDist.toString()));
+            ConnectionSQL.ps.setDouble(5,Double.parseDouble(controller.funcSalario.toString()));
+            ConnectionSQL.ps.setInt(6,Integer.parseInt(controller.funcGastos.toString()));
+
+                    controller.sendInfoFunc.setOnAction(new EventHandler<ActionEvent>(){
+                    @Override public void handle(ActionEvent e) {
+                        try{
+                            ConnectionSQL.ps.execute();
+                        }catch(SQLException ex){
+                            System.out.println("Erro ao inserir dados.");
+                        }
+
+                    }
+                });
+
+        }
+
+
+
+
 
 
 

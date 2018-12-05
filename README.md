@@ -12,3 +12,11 @@ CHANGELOG
 0.0.5
   - Imported the ConnectorJ driver;
   - Connection class transferred to a new package;
+  
+0.0.6
+  - Added a MySQL queries class;  
+  - Successfully connected the JBDC driver;
+  
+ 0.0.7
+   - Updated the user insertion form
+   - Added an insertion query structure
